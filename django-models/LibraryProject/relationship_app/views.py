@@ -1,10 +1,9 @@
-#!/usr/bin/python3
 # relationship_app/views.py
 
 from django.shortcuts import render
-from django.views.generic.detail import DetailView
+from django.views.generic.detail import DetailView  # exact import required
 from .models import Book
-from .models import Library
+from .models import Library  # exact import required
 
 # Function-Based View to list all books
 def list_books(request):
