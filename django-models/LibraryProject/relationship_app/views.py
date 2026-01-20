@@ -1,19 +1,17 @@
 #!/usr/bin/python3
 # relationship_app/views.py
 
-# ALX requires this import explicitly
+from django.shortcuts import render
+from django.views.generic import DetailView
 from .models import Book, Library
 
-from django.shortcuts import render
-from django.views.generic.detail import DetailView
-
-# Function-based view: List all books
+# Function-Based View to list all books
 def list_books(request):
     books = Book.objects.all()
-    return render(request, "relationship_app/list_books.html", {"books": books})
+    return render(request, 'relationship_app/list_books.html', {'books': books})
 
-# Class-based view: Show details of a specific library
+# Class-Based View to show library details
 class LibraryDetailView(DetailView):
     model = Library
-    template_name = "relationship_app/library_detail.html"
-    context_object_name = "library"
+    template_name = 'relationship_app/library_detail.html'
+    context_object_name = 'library'
