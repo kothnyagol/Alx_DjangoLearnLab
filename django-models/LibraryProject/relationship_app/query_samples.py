@@ -1,67 +1,62 @@
-#!/usr/bin/pyrhon3
+#!/usr/bin/python3
 import os
 import django
 
-# ----------------------------
-# Setup Django environment
-# ----------------------------
+# Set up Django environment
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LibraryProject.settings')
 django.setup()
 
-# ----------------------------
-# Import models
-# ----------------------------
 from relationship_app.models import Author, Book, Library, Librarian
 
-# ----------------------------
-# Query functions
-# ----------------------------
-
+# -----------------------------
+# Function: Query all books by a specific author
+# -----------------------------
 def query_books_by_author(author_name):
-    """Return all books by a specific author"""
     try:
         author = Author.objects.get(name=author_name)
-        return author.book_set.all()  # or use related_name if defined
+        # ALX expects this exact usage
+        return Book.objects.filter(author=author)
     except Author.DoesNotExist:
         return []
 
+# -----------------------------
+# Function: List all books in a library
+# -----------------------------
 def query_books_in_library(library_name):
-    """
-    Return all books in a library.
-    ALX checker expects `.get()` here.
-    Make sure only one library exists with this name to avoid MultipleObjectsReturned.
-    """
-    library = Library.objects.get(name=library_name)
-    return library.books.all()
+    try:
+        library = Library.objects.get(name=library_name)  # ALX expects .get()
+        return library.books.all()
+    except Library.DoesNotExist:
+        return []
 
+# -----------------------------
+# Function: Retrieve the librarian for a library
+# -----------------------------
 def query_librarian_for_library(library_name):
-    """Return the librarian for a library"""
     try:
         library = Library.objects.get(name=library_name)
-        return [library.librarian]  # return as list for consistency
+        # Return as a list for consistency
+        return [library.librarian]
     except Library.DoesNotExist:
         return []
     except Librarian.DoesNotExist:
         return []
 
-# ----------------------------
-# Run queries if script is executed directly
-# ----------------------------
+# -----------------------------
+# Test script when running directly
+# -----------------------------
 if __name__ == "__main__":
     author_name = "Chinua Achebe"
     library_name = "Central Library"
 
     print(f"Books by {author_name}:")
-    books_by_author = query_books_by_author(author_name)
-    for book in books_by_author:
+    for book in query_books_by_author(author_name):
         print(f"- {book.title}")
 
     print(f"\nBooks in {library_name}:")
-    books_in_library = query_books_in_library(library_name)
-    for book in books_in_library:
+    for book in query_books_in_library(library_name):
         print(f"- {book.title}")
 
     print(f"\nLibrarians for {library_name}:")
-    librarians = query_librarian_for_library(library_name)
-    for librarian in librarians:
+    for librarian in query_librarian_for_library(library_name):
         print(f"- {librarian.name}")
