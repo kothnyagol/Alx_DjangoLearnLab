@@ -1,54 +1,16 @@
 #!/usr/bin/python3
-from django.shortcuts import render, redirect
-from django.views.generic import DetailView
-
-# ✅ ALX-REQUIRED AUTH IMPORTS
-from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
-
+# relationship_app/views.py
+from django.shortcuts import render
+from django.views.generic.detail import DetailView
 from .models import Book, Library
 
-
-# -------------------------------------------------
-# FUNCTION-BASED VIEW
-# -------------------------------------------------
+# Function-based view: List all books
 def list_books(request):
-    """
-    Lists all books in the database.
-    Displays book title and author.
-    """
     books = Book.objects.all()
-    return render(request, "list_books.html", {"books": books})
+    return render(request, "relationship_app/list_books.html", {"books": books})
 
-
-# -------------------------------------------------
-# CLASS-BASED VIEW
-# -------------------------------------------------
+# Class-based view: Show details of a specific library
 class LibraryDetailView(DetailView):
-    """
-    Displays details of a specific library
-    and lists all books in that library.
-    """
     model = Library
-    template_name = "library_detail.html"
+    template_name = "relationship_app/library_detail.html"
     context_object_name = "library"
-
-
-# -------------------------------------------------
-# AUTHENTICATION VIEWS
-# -------------------------------------------------
-def register(request):
-    """
-    Handles user registration using
-    Django's built-in UserCreationForm.
-    """
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)  # ✅ REQUIRED BY ALX
-            return redirect("list_books")
-    else:
-        form = UserCreationForm()
-
-    return render(request, "register.html", {"form": form})
