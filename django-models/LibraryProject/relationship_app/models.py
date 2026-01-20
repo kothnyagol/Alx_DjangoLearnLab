@@ -1,6 +1,3 @@
-#!/usr/bin/python3
-# relationship_app/models.py
-
 from django.db import models
 
 class Author(models.Model):
