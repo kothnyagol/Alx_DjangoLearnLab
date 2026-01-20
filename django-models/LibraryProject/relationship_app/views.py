@@ -1,30 +1,45 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth.decorators import login_required
+from .forms import RegisterForm
 
+# Registration view
 def register_view(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
-            messages.success(request, "Registration successful!")
-            return redirect('home')
+            login(request, user)  # Log the user in immediately after registration
+            messages.success(request, "Registration successful.")
+            return redirect("home")  # Redirect to homepage
         else:
-            messages.error(request, "Registration failed. Please check the form.")
+            messages.error(request, "Invalid information")
     else:
-        form = UserCreationForm()
-    return render(request, 'relationship_app/register.html', {'form': form})
+        form = RegisterForm()
+    return render(request, "relationship_app/register.html", {"form": form})
 
-class CustomLoginView(LoginView):
-    template_name = 'relationship_app/login.html'
+# Login view
+def login_view(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            messages.success(request, f"Welcome {user.username}")
+            return redirect("home")  # Redirect to homepage
+        else:
+            messages.error(request, "Invalid username or password")
+    else:
+        form = AuthenticationForm()
+    return render(request, "relationship_app/login.html", {"form": form})
 
-class CustomLogoutView(LogoutView):
-    template_name = 'relationship_app/logout.html'
+# Logout view
+def logout_view(request):
+    logout(request)
+    messages.info(request, "You have been logged out")
+    return render(request, "relationship_app/logout.html")
 
-@login_required
-def home(request):
-    return render(request, 'relationship_app/home.html', {'user': request.user})
+# Home view
+def home_view(request):
+    return render(request, "relationship_app/home.html")
