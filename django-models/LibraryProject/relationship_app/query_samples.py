@@ -34,9 +34,11 @@ def query_books_in_library(library_name):
 # -----------------------------
 def query_librarian_for_library(library_name):
     try:
+        # Get the library first
         library = Library.objects.get(name=library_name)
-        # Return as a list for consistency
-        return [library.librarian]
+        # ALX expects direct query from Librarian model
+        librarian = Librarian.objects.get(library=library)
+        return [librarian]
     except Library.DoesNotExist:
         return []
     except Librarian.DoesNotExist:
