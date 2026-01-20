@@ -1,8 +1,11 @@
 #!/usr/bin/python3
 # relationship_app/views.py
+
+# ALX requires this import explicitly
+from .models import Book, Library
+
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
-from .models import Book, Library
 
 # Function-based view: List all books
 def list_books(request):
