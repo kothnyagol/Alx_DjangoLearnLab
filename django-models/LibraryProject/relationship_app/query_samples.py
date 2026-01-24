@@ -3,11 +3,12 @@ from relationship_app.models import Author, Book, Library, Librarian
 # --- CREATE SAMPLE DATA ---
 
 # Create author
-author1, created = Author.objects.get_or_create(name="Jane Austen")
+author_name = "Jane Austen"
+author, created = Author.objects.get_or_create(name=author_name)
 
 # Create books for the author
-book1, created = Book.objects.get_or_create(title="Pride and Prejudice", author=author1)
-book2, created = Book.objects.get_or_create(title="Emma", author=author1)
+book1, created = Book.objects.get_or_create(title="Pride and Prejudice", author=author)
+book2, created = Book.objects.get_or_create(title="Emma", author=author)
 
 # Create a library
 library_name = "Central Library"
@@ -22,15 +23,16 @@ librarian, created = Librarian.objects.get_or_create(name="Mr. John Doe", librar
 # --- RUN SAMPLE QUERIES ---
 
 # 1. Query all books by a specific author
-books_by_author = Book.objects.filter(author=author1)
-print("Books by Jane Austen:")
+author = Author.objects.get(name=author_name)
+books_by_author = Book.objects.filter(author=author)
+print("Books by", author_name)
 for book in books_by_author:
     print("-", book.title)
 
 # 2. List all books in a library
 library = Library.objects.get(name=library_name)
 books_in_library = library.books.all()
-print("\nBooks in library:")
+print("\nBooks in library:", library_name)
 for book in books_in_library:
     print("-", book.title)
 
