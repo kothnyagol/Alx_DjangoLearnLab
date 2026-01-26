@@ -126,3 +126,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# SECURITY BEST PRACTICES
+DEBUG = False  # never show detailed errors in production
+
+SECURE_BROWSER_XSS_FILTER = True       # browser protection against XSS
+SECURE_CONTENT_TYPE_NOSNIFF = True     # prevent MIME type sniffing
+X_FRAME_OPTIONS = 'DENY'               # prevent clickjacking
+
+CSRF_COOKIE_SECURE = True              # CSRF cookies only over HTTPS
+SESSION_COOKIE_SECURE = True           # session cookies only over HTTPS
+
+# OPTIONAL: force HTTPS in production
+SECURE_HSTS_SECONDS = 31536000         # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
