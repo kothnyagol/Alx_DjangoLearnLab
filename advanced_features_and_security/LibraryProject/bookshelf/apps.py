@@ -1,13 +1,15 @@
 from django.apps import AppConfig
-from django.contrib.auth.models import Group, Permission
-from django.contrib.contenttypes.models import ContentType
 
 class BookshelfConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'bookshelf'
 
     def ready(self):
-        Book = self.get_model('Book')
+        # Imports here to avoid AppRegistryNotReady
+        from django.contrib.auth.models import Group, Permission
+        from django.contrib.contenttypes.models import ContentType
+        from .models import Book
+
         content_type = ContentType.objects.get_for_model(Book)
         permissions = Permission.objects.filter(content_type=content_type)
 
