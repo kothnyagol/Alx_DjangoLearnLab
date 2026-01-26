@@ -1,64 +1,41 @@
-#!/usr/bin/python3
-import os
-import django
-
-# Set up Django environment
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LibraryProject.settings')
-django.setup()
-
 from relationship_app.models import Author, Book, Library, Librarian
 
-# -----------------------------
-# Function: Query all books by a specific author
-# -----------------------------
-def query_books_by_author(author_name):
-    try:
-        author = Author.objects.get(name=author_name)
-        # ALX expects this exact usage
-        return Book.objects.filter(author=author)
-    except Author.DoesNotExist:
-        return []
+# --- CREATE SAMPLE DATA ---
 
-# -----------------------------
-# Function: List all books in a library
-# -----------------------------
-def query_books_in_library(library_name):
-    try:
-        library = Library.objects.get(name=library_name)  # ALX expects .get()
-        return library.books.all()
-    except Library.DoesNotExist:
-        return []
+# Create author
+author_name = "Jane Austen"
+author, created = Author.objects.get_or_create(name=author_name)
 
-# -----------------------------
-# Function: Retrieve the librarian for a library
-# -----------------------------
-def query_librarian_for_library(library_name):
-    try:
-        # Get the library first
-        library = Library.objects.get(name=library_name)
-        # ALX expects direct query from Librarian model
-        librarian = Librarian.objects.get(library=library)
-        return [librarian]
-    except Library.DoesNotExist:
-        return []
-    except Librarian.DoesNotExist:
-        return []
+# Create books for the author
+book1, created = Book.objects.get_or_create(title="Pride and Prejudice", author=author)
+book2, created = Book.objects.get_or_create(title="Emma", author=author)
 
-# -----------------------------
-# Test script when running directly
-# -----------------------------
-if __name__ == "__main__":
-    author_name = "Chinua Achebe"
-    library_name = "Central Library"
+# Create a library
+library_name = "Central Library"
+library, created = Library.objects.get_or_create(name=library_name)
 
-    print(f"Books by {author_name}:")
-    for book in query_books_by_author(author_name):
-        print(f"- {book.title}")
+# Add books to the library
+library.books.add(book1, book2)
 
-    print(f"\nBooks in {library_name}:")
-    for book in query_books_in_library(library_name):
-        print(f"- {book.title}")
+# Create a librarian for that library
+librarian, created = Librarian.objects.get_or_create(name="Mr. John Doe", library=library)
 
-    print(f"\nLibrarians for {library_name}:")
-    for librarian in query_librarian_for_library(library_name):
-        print(f"- {librarian.name}")
+# --- RUN SAMPLE QUERIES ---
+
+# 1. Query all books by a specific author
+author = Author.objects.get(name=author_name)
+books_by_author = Book.objects.filter(author=author)
+print("Books by", author_name)
+for book in books_by_author:
+    print("-", book.title)
+
+# 2. List all books in a library
+library = Library.objects.get(name=library_name)
+books_in_library = library.books.all()
+print("\nBooks in library:", library_name)
+for book in books_in_library:
+    print("-", book.title)
+
+# 3. Retrieve the librarian for a library
+librarian = Librarian.objects.get(library=library)
+print("\nLibrarian for library:", librarian.name)
