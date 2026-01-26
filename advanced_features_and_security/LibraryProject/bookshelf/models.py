@@ -1,6 +1,7 @@
-from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 
+# Custom user manager
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, password=None, **extra_fields):
         if not username:
@@ -20,6 +21,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser=True.")
         return self.create_user(username, password, **extra_fields)
 
+# Custom user model
 class CustomUser(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True)
     profile_photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
@@ -28,3 +30,12 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+
+# Existing Book model
+class Book(models.Model):
+    title = models.CharField(max_length=255)
+    author = models.CharField(max_length=255)
+    publication_year = models.IntegerField()
+
+    def __str__(self):
+        return self.title
