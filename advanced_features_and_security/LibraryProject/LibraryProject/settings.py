@@ -153,6 +153,9 @@ SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS to all subdomains
 SECURE_HSTS_PRELOAD = True
 
+# When Django is behind a proxy (like Nginx), trust the X-Forwarded-Proto header
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Ensure cookies are only sent over HTTPS
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
